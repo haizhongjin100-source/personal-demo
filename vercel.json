@@ -1,5 +1,7 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/chat" }
+    { "source": "/api/chat", "destination": "/api/chat.js" }
   ]
 }
