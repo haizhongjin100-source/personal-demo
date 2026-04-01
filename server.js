@@ -151,8 +151,13 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-// 启动服务器
-app.listen(PORT, () => {
-    console.log(`🚀 服务器运行在 http://localhost:${PORT}`);
-    console.log(`📱 个人主页: http://localhost:${PORT}/index.html`);
-});
+// 启动服务器（本地开发用，Vercel 不走这里）
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`🚀 服务器运行在 http://localhost:${PORT}`);
+        console.log(`📱 个人主页: http://localhost:${PORT}/index.html`);
+    });
+}
+
+// 导出给 Vercel Serverless
+module.exports = app;
