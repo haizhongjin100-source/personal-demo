@@ -158,28 +158,3 @@ const express = require('express');
           console.log(`📱 个人主页: http://localhost:${PORT}/index.html`);
       });
   }
-
-  // 导出给 Vercel Serverless
-  module.exports = app;
-
-  5. 点右上角 Commit changes → 再点 Commit changes
-
-  2. 新建 vercel.json
-
-  1. 回到仓库首页，点 Add file → Create new file
-  2. 文件名输入 vercel.json
-  3. 内容粘贴：
-
-  {
-    "version": 2,
-    "builds": [
-      {
-        "src": "server.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      { "src": "/api/(.*)", "dest": "server.js" },
-      { "src": "/(.*)", "dest": "server.js" }
-    ]
-  }
