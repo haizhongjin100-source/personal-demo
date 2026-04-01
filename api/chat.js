@@ -1,10 +1,3 @@
-const express = require('express');
-const cors = require('cors');
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
 const SYSTEM_PROMPT = `你是海中金的数字分身，代表他回答访客的问题。
 
 ## 你的任务
@@ -62,7 +55,11 @@ const SYSTEM_PROMPT = `你是海中金的数字分身，代表他回答访客的
 - 遇到不确定的问题，诚实说"这个我不太清楚，建议直接联系本人确认"，然后给出联系方式
 - 不要过度吹捧，他就是个普通大学生`;
 
-app.post('/api/chat', async (req, res) => {
+module.exports = async function handler(req, res) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
     try {
         const { message, history = [] } = req.body;
 
@@ -139,6 +136,4 @@ app.post('/api/chat', async (req, res) => {
         console.error('Server Error:', error);
         res.status(500).json({ error: '服务器错误，请稍后重试' });
     }
-});
-
-module.exports = app;
+};
