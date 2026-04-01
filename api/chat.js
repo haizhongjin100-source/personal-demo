@@ -50,7 +50,6 @@ const SYSTEM_PROMPT = `你是海中金的数字分身，代表他回答访客的
   - 保持学生气，真诚自然就好
 
   ## 边界（重要）
-
   - 不要编造他没做过的经历
   - 不要假装知道没提供的信息
   - 遇到不确定的问题，诚实说"这个我不太清楚，建议直接联系本人确认"，然后给出联系方式
@@ -119,9 +118,10 @@ const SYSTEM_PROMPT = `你是海中金的数字分身，代表他回答访客的
                       } else {
                           try {
                               const parsed = JSON.parse(data);
-                              const content = parsed.choices?.[0]?.delta?.content;
+                              const content = parsed.choices && parsed.choices[0] && parsed.choices[0].delta
+  && parsed.choices[0].delta.content;
                               if (content) {
-                                  res.write(`data: ${JSON.stringify({ content })}\n\n`);
+                                  res.write('data: ' + JSON.stringify({ content }) + '\n\n');
                               }
                           } catch (e) {}
                       }
