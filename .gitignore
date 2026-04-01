@@ -1,0 +1,14 @@
+# 环境变量（含 API Key，绝对不能上传）
+.env
+
+# 依赖
+node_modules/
+
+# 日志
+*.log
+
+# 备份
+个人主页4.1/
+
+# Agent Team 工作文件
+.agent-team/
