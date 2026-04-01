@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(node server.js)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3000)",
+      "Bash(taskkill:*)",
+      "Bash(curl:*)",
+      "Bash(node:*)",
+      "WebSearch",
+      "Bash(npm start:*)",
+      "Bash(rm -rf \"D:\\\\Claude code使用\\\\个人网页_备份_20260331\")",
+      "Bash(mkdir -p \"D:\\\\Claude code使用\\\\个人网页_备份\")",
+      "Bash(rsync -av --exclude='node_modules' . \"D:\\\\Claude code使用\\\\个人网页_备份\")",
+      "Bash(cp -r index.html server.js .env .env.example .gitignore CLAUDE.md 9d48064d2ba16a7aa1c11437bc151abc.jpg package.json package-lock.json \"D:\\\\Claude code使用\\\\个人网页_备份/\")",
+      "Bash(rm -rf \"D:\\\\Claude code使用\\\\个人网页_备份\")",
+      "Bash(mkdir -p \"D:\\\\Claude code使用\\\\个人网页备份v1\")",
+      "Bash(cp -r index.html server.js .env .env.example .gitignore CLAUDE.md 9d48064d2ba16a7aa1c11437bc151abc.jpg package.json package-lock.json \"D:\\\\Claude code使用\\\\个人网页备份v1/\")",
+      "Bash(rm -rf \"D:\\\\Claude code使用\\\\个人网页备份\")",
+      "Bash(mkdir -p \"D:\\\\Claude code使用\\\\个人网页备份v2\")",
+      "Bash(cp -r index.html server.js .env .env.example .gitignore CLAUDE.md 9d48064d2ba16a7aa1c11437bc151abc.jpg package.json package-lock.json \"D:\\\\Claude code使用\\\\个人网页备份v2/\")"
+    ]
+  }
+}
