@@ -55,17 +55,64 @@ const SYSTEM_PROMPT = `你是海中金的数字分身，代表他回答访客的
 - 遇到不确定的问题，诚实说"这个我不太清楚，建议直接联系本人确认"，然后给出联系方式
 - 不要过度吹捧，他就是个普通大学生`;
 
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+
+async function insertConversation(sessionId, userMessage) {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
+    try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/conversations`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({
+                session_id: sessionId,
+                user_message: userMessage
+            })
+        });
+        const data = await res.json();
+        return data[0]?.id || null;
+    } catch (e) {
+        console.error('Supabase insert error:', e);
+        return null;
+    }
+}
+
+async function updateReply(id, reply) {
+    if (!id || !SUPABASE_URL || !SUPABASE_ANON_KEY) return;
+    try {
+        await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${id}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ai_reply: reply })
+        });
+    } catch (e) {
+        console.error('Supabase update error:', e);
+    }
+}
+
 module.exports = async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const { message, history = [] } = req.body;
+        const { message, history = [], session_id } = req.body;
 
         if (!message) {
             return res.status(400).json({ error: '请提供消息内容' });
         }
+
+        // 存储用户消息
+        const recordId = await insertConversation(session_id || 'unknown', message);
 
         const messages = [
             { role: 'system', content: SYSTEM_PROMPT },
@@ -102,6 +149,7 @@ module.exports = async function handler(req, res) {
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
+        let fullReply = '';
 
         while (true) {
             const { done, value } = await reader.read();
@@ -120,6 +168,7 @@ module.exports = async function handler(req, res) {
                             const parsed = JSON.parse(data);
                             const content = parsed.choices?.[0]?.delta?.content;
                             if (content) {
+                                fullReply += content;
                                 res.write(`data: ${JSON.stringify({ content })}\n\n`);
                             }
                         } catch (e) {
@@ -131,6 +180,9 @@ module.exports = async function handler(req, res) {
         }
 
         res.end();
+
+        // 流结束后存储 AI 回复
+        await updateReply(recordId, fullReply);
 
     } catch (error) {
         console.error('Server Error:', error);

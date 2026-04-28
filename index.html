@@ -1816,6 +1816,7 @@
 
         // 聊天功能
         let chatHistory = [];
+        window.__sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
 
         // 用户头像（访客）
         const guestAvatar = `<svg viewBox="0 0 24 24" width="32" height="32"><circle cx="12" cy="12" r="10" fill="#3b8beb"/><circle cx="12" cy="9" r="4" fill="#fff"/><path d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z" fill="#fff"/></svg>`;
@@ -1860,7 +1861,7 @@
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text, history: chatHistory.slice(-10) })
+                    body: JSON.stringify({ message: text, history: chatHistory.slice(-10), session_id: window.__sessionId })
                 });
 
                 // 创建消息气泡
